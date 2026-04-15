@@ -1,0 +1,22 @@
+{
+  "pack": "flux-fpm",
+  "version": "1.0.0",
+  "author": "Himanshu Kant",
+  "license": "MIT",
+
+  "repository": "https://github.com/Hemansh2633B/MATH-4-FLUX",
+
+  "base_url": "https://raw.githubusercontent.com/Hemansh2633B/MATH-4-FLUX/main/src",
+
+  "packages": {
+    "flux-math": {
+      "version": "1.0.0",
+      "entries": {
+        "main": "main.fx"
+      },
+      "path": "",
+      "description": "Math library for Flux",
+      "dependencies": {}
+    }
+  }
+}
