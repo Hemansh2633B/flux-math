@@ -1,5 +1,4 @@
-# MATH-4-FLUX
-A standard MATH libraray for FLUX 
+
 # 📦 flux-math
 
 > A complete mathematical library for the Flux programming language — inspired by Python’s `math` module.
