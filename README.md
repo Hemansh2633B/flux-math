@@ -23,12 +23,13 @@ This library extends beyond basic math to include:
 
 * 🔢 **Complex Arithmetic** — Full complex number support with proper branch cuts
 * 🧮 **Special Functions** — Gamma, Beta, Bessel, Error functions, Zeta functions
-* 📈 **Advanced Algebra** — Matrix operations, Möbius transforms, Lambert W function
+* 📈 **Advanced Algebra** — N-dimensional matrices, Möbius transforms, Lambert W function
 * 🔺 **Trigonometry & Hyperbolics** — Extended to complex domain with exotic functions
 * ⚡ **Numerical Methods** — Root finding, integration, differentiation
-* 📊 **Signal Processing** — DFT tools, window functions, phase analysis
+* 📊 **Signal Processing** — FFT, DFT tools, window functions
+* ♾️ **Arbitrary Precision** — High-precision `BigFloat` arithmetic
+* 🎲 **Probability & Stats** — PCG32 RNG, Normal and Uniform distributions
 * 📐 **Constants & Classification** — 17+ mathematical constants, type predicates
-* 🧪 **Scientific Computing** — Ready for physics, engineering, and quantum computing
 
 ---
 
@@ -55,6 +56,11 @@ flux-cMath/
 │   ├── matrix.fx          # 2×2 complex matrices
 │   ├── mobius.fx          # Möbius transformations
 │   ├── numeric.fx         # Numerical methods
+│   ├── bigmath.fx         # Arbitrary precision arithmetic
+│   ├── ndarray.fx         # N-dimensional matrices and vectors
+│   ├── random.fx          # PCG32 random number generation
+│   ├── stats.fx           # Statistical distributions
+│   ├── fft.fx             # Fast Fourier Transform
 │   └── format.fx          # Output formatting
 ├── package.json
 ├── README.md
@@ -137,20 +143,47 @@ fn special_functions() {
 }
 ```
 
-### Matrix Operations
+### Matrix Operations (N-Dimensional)
 
 ```flux
 import cmath
 
 fn matrix_demo() {
-    let m1 = cmath.matrix_identity();
-    let m2 = cmath.matrix_pauli_x();
+    let m1 = cmath.mat_new(2, 2);
+    m1 = cmath.mat_set(m1, 0, 0, 1.0);
+    m1 = cmath.mat_set(m1, 1, 1, 1.0);
 
-    let prod = cmath.matrix_mul(m1, m2);
-    let exp_m = cmath.matrix_exp(m2);
+    let m2 = cmath.mat_transpose_nd(m1);
+    let prod = cmath.mat_mul_nd(m1, m2);
+    let inv = cmath.mat_inv_nd(m1);
 
-    print(cmath.matrix_det(prod));  // Determinant
-    print(cmath.matrix_trace(exp_m));  // Trace
+    print(cmath.mat_det_nd(prod));  // 1.0
+}
+```
+
+### Arbitrary Precision
+
+```flux
+import cmath
+
+fn bigmath_demo() {
+    cmath.big_set_precision(32);
+    let a = cmath.big_from_double(2.0);
+    let root = cmath.big_sqrt(a);
+    print(cmath.big_to_double(root)); // 1.41421356...
+}
+```
+
+### Random & Statistics
+
+```flux
+import cmath
+
+fn stats_demo() {
+    cmath.seed(12345uL);
+    let val = cmath.normal_sample(0.0, 1.0);
+    let p = cmath.normal_pdf(val, 0.0, 1.0);
+    print(p);
 }
 ```
 
@@ -236,11 +269,28 @@ fn signal_demo() {
 * `ei(z)`, `li(z)` — Exponential and logarithmic integrals
 
 ### 🔹 Matrix Algebra
-* `matrix_mul(a, b)`, `matrix_add(a, b)` — Basic operations
-* `matrix_inv(m)`, `matrix_det(m)`, `matrix_trace(m)` — Properties
-* `matrix_exp(m)`, `matrix_pow(m, n)` — Advanced operations
-* `matrix_eigenvalues(m)` — Eigenvalue computation
+* `mat_add_nd(A, B)`, `mat_mul_nd(A, B)` — N-dimensional operations
+* `mat_inv_nd(m)`, `mat_det_nd(m)`, `mat_transpose_nd(m)` — Properties
+* `mat_lu(m)` — LU Decomposition
+* `matrix_mul(a, b)`, `matrix_add(a, b)` — 2×2 complex operations
 * Pauli matrices: `matrix_pauli_x()`, `matrix_pauli_y()`, `matrix_pauli_z()`
+
+### 🔹 Arbitrary Precision (`BigFloat`)
+* `big_add(a, b)`, `big_sub(a, b)`, `big_mul(a, b)`, `big_div(a, b)` — Basic arithmetic
+* `big_sqrt(z)`, `big_exp(z)`, `big_log(z)`, `big_pow(a, b)` — Advanced functions
+* `big_sin(z)`, `big_cos(z)`, `big_tan(z)` — Trigonometry
+* `big_set_precision(p)` — Configure global precision
+
+### 🔹 Random & Statistics
+* `seed(s)`, `rand_f64()`, `rand_int(min, max)` — RNG utilities
+* `normal_pdf(x, mu, sigma)`, `normal_sample(mu, sigma)` — Normal distribution
+* `uniform_pdf(x, a, b)`, `uniform_sample(a, b)` — Uniform distribution
+* `mean(v)`, `variance(v)`, `std_dev(v)` — Descriptive statistics
+
+### 🔹 Signal Processing
+* `fft_inplace(data, n)`, `ifft_inplace(data, n)` — Fast Fourier Transform
+* Window functions: `hann_window(n)`, `hamming_window(n)`, `blackman_window(n)`
+* `dft_twiddle(n, k)` — DFT twiddle factors
 
 ### 🔹 Möbius Transformations
 * `mobius_apply(t, z)` — Apply transformation
@@ -289,19 +339,15 @@ For IEEE-754 compliant accuracy, consider native C bindings in future versions.
 
 ## 🛣️ Roadmap
 
-### v1.1 (Current)
+### v2.0 (Current)
 * ✅ Complex number support
 * ✅ Special functions (Gamma, Bessel, Error, Zeta)
-* ✅ Matrix algebra and Möbius transforms
+* ✅ Arbitrary precision arithmetic (`BigFloat`)
+* ✅ N-dimensional matrices and vectors
+* ✅ Random number generation (PCG32)
+* ✅ Statistical distributions and functions
+* ✅ FFT implementation
 * ✅ Numerical methods and signal processing
-* ✅ Comprehensive test suite
-
-### v2.0
-* Arbitrary precision arithmetic
-* N-dimensional matrices and vectors
-* Random number generation
-* Statistical distributions and functions
-* FFT implementation
 
 ### v3.0
 * Native C bindings for performance

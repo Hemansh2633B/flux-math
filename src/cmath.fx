@@ -16,3 +16,8 @@
 #import "mobius.fx";
 #import "numeric.fx";
 #import "format.fx";
+#import "bigmath.fx";
+#import "ndarray.fx";
+#import "random.fx";
+#import "stats.fx";
+#import "fft.fx";
